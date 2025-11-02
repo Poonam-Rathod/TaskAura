@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Focus Mode</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #b33c52, #c84c61);
+            height: 100vh;
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            overflow: hidden;
+        }
+
+        .focus-box {
+            padding: 35px 50px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 20px;
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 700;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 40px rgba(0,0,0,0.35);
+        }
+
+        .exit-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: #fff;
+            color: #b33c52;
+            font-weight: bold;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            text-decoration: none;
+        }
+
+        .exit-btn:hover {
+            background: #ffe5e9;
+        }
+    </style>
+</head>
+
+<body>
+
+    <a href="{% url 'home' %}" class="exit-btn">Exit</a>
+
+    {% if tasks %}
+        <div class="focus-box">
+            {{ tasks.0.title }}
+        </div>
+    {% else %}
+        <div class="focus-box">
+            ✅ No pending tasks. Enjoy your break.
+        </div>
+    {% endif %}
+
+</body>
+</html>

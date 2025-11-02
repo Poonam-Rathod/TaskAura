@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TaskAura</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+  <!-- Custom CSS -->
+  <style>
+    /* Focus Mode */
+.focus-mode .sidebar {
+  display: none !important;
+}
+
+.focus-mode .main-content {
+  width: 100% !important;
+}
+
+.focus-mode .navbar {
+  box-shadow: none;
+}
+
+.transition-all {
+  transition: all 0.4s ease-in-out;
+}
+
+    body {
+      background: linear-gradient(120deg, #fff5f5, #ffecec);
+      font-family: 'Roboto', sans-serif;
+      min-height: 100vh;
+      transition: background 0.3s, color 0.3s;
+      color: #222;
+    }
+
+    h1,h2,h3,h4,h5,h6 {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      color: #c92a71;
+    }
+
+    /* Navbar */
+    .navbar {
+      background: linear-gradient(90deg, #b33c52, #c84c61);
+      padding: 12px 30px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      transition: background 0.3s;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      background: white;
+      min-height: 100vh;
+      border-right: 1px solid #ddd;
+      padding: 2rem 1.5rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      transition: background 0.3s;
+    }
+
+    /* Cards */
+    .dashboard-card {
+      border-radius: 16px;
+      background: white;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      transition: background 0.3s, transform 0.3s;
+    }
+
+    .dashboard-card:hover {
+      transform: translateY(-5px) scale(1.04);
+    }
+
+   
+
+    /* Toggle Switch Style */
+    .theme-switch {
+      background: #fff;
+      width: 50px;
+      height: 25px;
+      border-radius: 20px;
+      position: relative;
+      cursor: pointer;
+      padding: 3px;
+      transition: 0.3s;
+    }
+
+    .theme-switch-circle {
+      width: 20px;
+      height: 20px;
+      background-color: #b33c52;
+      border-radius: 50%;
+      position: absolute;
+      left: 3px;
+      top: 2.5px;
+      transition: 0.3s;
+    }
+
+    .theme-switch.dark .theme-switch-circle {
+      left: 27px;
+      background-color: #ffecec;
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  
+<nav class="navbar navbar-expand-lg navbar-dark">
+  <div class="container">
+
+  <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
+  <i class="bi bi-check2-circle me-2" style="font-size: 1.7rem; color: #ffecec;"></i>
+  <span style="
+      font-size: 1.8rem;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      background: linear-gradient(90deg, #ffe1f0, #ffffff);
+      -webkit-background-clip: text;
+      color: transparent;
+      letter-spacing: 1px;
+    ">
+    TaskAura
+  </span>
+</a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto align-items-center">
+
+        <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+
+      
+        {% if request.user.is_authenticated %}
+          <li class="nav-item">
+            <span class="nav-link">Hi, {{ request.user.username }}</span>
+          </li>
+            <!-- Focus Mode Button -->
+        <li class="nav-item">
+    <a href="{% url 'focus_mode' %}" class="btn btn-light text-dark ms-3">Focus Mode</a>
+</li>
+
+
+          <li class="nav-item">
+            <form method="POST" action="{% url 'logout' %}">
+              {% csrf_token %}
+              <button class="btn btn-light text-dark ms-2">Logout</button>
+            </form>
+          </li>
+        {% else %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'login' %}">Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'register' %}">Register</a>
+          </li>
+        {% endif %}
+
+      </ul>
+    </div>
+
+  </div>
+</nav>
+
+
+
+<div class="container-fluid mt-4">
+  {% block content %}{% endblock %}
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const toggle = document.getElementById("darkModeSwitch");
+  const body = document.body;
+
+  const savedTheme = localStorage.getItem("dark-mode");
+  if (savedTheme === "enabled") {
+    body.classList.add("dark-mode");
+    toggle.classList.add("dark");
+  }
+
+  toggle.addEventListener("click", function () {
+    body.classList.toggle("dark-mode");
+    toggle.classList.toggle("dark");
+
+    if (body.classList.contains("dark-mode")) {
+      localStorage.setItem("dark-mode", "enabled");
+    } else {
+      localStorage.setItem("dark-mode", "disabled");
+    }
+  });
+});
+</script>
+<script>
+document.getElementById("darkModeToggle").addEventListener("change", function () {
+  document.body.classList.toggle("dark-mode");
+});
+</script>
+<script>
+document.getElementById("focusModeBtn").addEventListener("click", function () {
+  document.body.classList.toggle("focus-mode");
+  this.innerHTML = document.body.classList.contains("focus-mode")
+    ? '<i class="bi bi-eye-fill"></i> Exit Focus'
+    : '<i class="bi bi-eye-slash-fill"></i> Focus';
+});
+</script>
+
+
+
+<style>
+  /* Chatbot Button */
+  #chatbot-icon {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: linear-gradient(90deg, #c92a71, #e95b9c);
+    color: white;
+    padding: 15px;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+    font-size: 22px;
+    z-index: 999;
+    transition: 0.3s;
+  }
+  #chatbot-icon:hover {
+    transform: scale(1.1);
+  }
+
+  /* Chatbot Box */
+  #chatbot-box {
+    display: none;
+    position: fixed;
+    bottom: 90px;
+    right: 30px;
+    width: 320px;
+    height: 420px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    flex-direction: column;
+    overflow: hidden;
+    font-family: 'Poppins', sans-serif;
+    z-index: 999;
+  }
+
+  #chatbot-header {
+    background: linear-gradient(90deg, #c92a71, #e95b9c);
+    color: white;
+    padding: 12px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 16px;
+  }
+
+  #chat-content {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+    font-size: 14px;
+  }
+
+  #chat-input-area {
+    display: flex;
+    border-top: 1px solid #eee;
+  }
+
+  #chat-input {
+    width: 80%;
+    border: none;
+    padding: 10px;
+    outline: none;
+  }
+
+  #chat-send {
+    width: 20%;
+    background: #ff85b3;
+    border: none;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+  }
+
+  #chat-send:hover {
+    background: #c92a71;
+  }
+
+  /* Chat messages */
+  .user-msg {
+    background: #ffe5ef;
+    padding: 8px 10px;
+    border-radius: 10px;
+    margin-bottom: 6px;
+    align-self: flex-end;
+    width: fit-content;
+    max-width: 80%;
+  }
+
+  .bot-msg {
+    background: #f7f7f7;
+    padding: 8px 10px;
+    border-radius: 10px;
+    margin-bottom: 6px;
+    align-self: flex-start;
+    width: fit-content;
+    max-width: 80%;
+  }
+</style>
+
+<script>
+function toggleChat() {
+  const chat = document.getElementById("chatbot-box");
+  chat.style.display = (chat.style.display === "none" || chat.style.display === "") ? "flex" : "none";
+}
+
+document.getElementById("chat-send").onclick = sendMessage;
+document.getElementById("chat-input").addEventListener("keypress", function(e) {
+  if (e.key === "Enter") sendMessage();
+});
+
+function sendMessage() {
+  const input = document.getElementById("chat-input");
+  const message = input.value.trim();
+  if (message === "") return;
+
+  const chatContent = document.getElementById("chat-content");
+  const userDiv = document.createElement("div");
+  userDiv.className = "user-msg";
+  userDiv.textContent = message;
+  chatContent.appendChild(userDiv);
+
+  fetch(`/chatbot/get_response/?message=${message}`)
+    .then(response => response.json())
+    .then(data => {
+      const botDiv = document.createElement("div");
+      botDiv.className = "bot-msg";
+      botDiv.textContent = data.reply;
+      chatContent.appendChild(botDiv);
+      chatContent.scrollTop = chatContent.scrollHeight;
+    });
+
+  input.value = "";
+}
+</script>
+
+
+</body>
+</html>

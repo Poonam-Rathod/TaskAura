@@ -1,0 +1,420 @@
+{% extends "tasks/base.html" %}
+{% block content %}
+
+<style>
+/* Sidebar Task Items */
+.task-item {
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: #fff !important;
+  font-weight: 600;
+  border: none !important;
+}
+
+/* Sidebar Buttons Hover */
+.hover-scale:hover {
+  transform: scale(1.03);
+  transition: all 0.2s ease-in-out;
+}
+
+/* Badge Colors */
+.badge-custom {
+  padding: 4px 10px;
+  border-radius: 10px;
+  font-size: 0.75rem;
+  font-weight: bold;
+}
+
+.bg-high { background-color: #ff4f7c !important; color:white !important;}
+.bg-medium { background-color: #ff85a2 !important; color:white !important;}
+.bg-low { background-color: #ffc0cb !important; color:white !important;}
+
+/* Glass Cards */
+.glass-card {
+  background: rgba(255, 255, 255, 0.18) !important;
+  backdrop-filter: blur(12px) !important;
+  border-radius: 14px !important;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #fff !important;
+}
+
+/* Table Text */
+.table td, .table th {
+  color: #222 !important;
+  font-weight: 600;
+}
+
+.table thead th {
+  color: #c92a71 !important;
+}
+
+/* Floating Button */
+.floating-btn {
+  bottom: 20px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  font-size: 28px;
+  background: rgba(255, 79, 124, 0.85);
+  backdrop-filter: blur(8px);
+  border: none;
+  color: #fff;
+  position: fixed;
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+}
+
+/* Add Task Form */
+.add-task-title {
+  color:#ff85a2;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+}
+
+.btn-pink {
+  background: #ff4f7c;
+  color: #fff;
+  width: 100%;
+  font-weight: 600;
+}
+
+.btn-pink:hover {
+  background: #ff7096;
+  color: #fff;
+}
+
+/* Action Buttons */
+.btn-action {
+  width: 35px;
+  height: 35px;
+  padding: 0;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: none;
+  transition: transform 0.2s ease-in-out;
+}
+
+.btn-action:hover {
+  transform: scale(1.1);
+}
+
+.btn-complete { background-color: #ff85a2; color: #fff; }
+.btn-edit { background-color: #ffc0cb; color: #fff; border: 1px solid #ff85a2; }
+.btn-delete { background-color: #ff4f7c; color: #fff; }
+
+/* Welcome animation */
+@keyframes fadeSlideGlow {
+  0% { opacity: 0; transform: translateY(20px); text-shadow: 0 0 0px #c92a71; }
+  50% { opacity: 1; transform: translateY(0); text-shadow: 0 0 10px #ff85a2, 0 0 20px #ff4f7c; }
+  100% { opacity: 1; transform: translateY(0); text-shadow: 0 0 15px #ff85a2, 0 0 25px #ff4f7c; }
+}
+
+.welcome-username {
+  display: inline-block;
+  color: #c92a71;
+  font-weight: 700;
+  animation: fadeSlideGlow 1.5s ease-out forwards;
+}
+
+/* Confetti effect */
+.confetti {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background-color: #ff4f7c;
+  top: 0;
+  animation: confetti-fall 1s forwards;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+@keyframes confetti-fall {
+  0% { transform: translateY(0) rotate(0deg); opacity:1; }
+  100% { transform: translateY(300px) rotate(360deg); opacity:0; }
+}
+
+/* DARK MODE FULL SUPPORT */
+body[data-bs-theme="dark"] {
+  background: linear-gradient(120deg, #1a1a1a, #262626) !important;
+  color: #fff;
+}
+
+body[data-bs-theme="dark"] .col-md-3 {
+  background: linear-gradient(135deg, #2a2a2a, #3a3a3a) !important;
+  border-right:1px solid #444 !important;
+}
+
+body[data-bs-theme="dark"] .glass-card {
+  background: rgba(0, 0, 0, 0.35) !important;
+  color: #fff !important;
+  border: 1px solid rgba(255,255,255,0.1) !important;
+}
+
+body[data-bs-theme="dark"] .task-item {
+  background: rgba(255,255,255,0.07) !important;
+  color: #fff !important;
+}
+
+body[data-bs-theme="dark"] .table td,
+body[data-bs-theme="dark"] .table th {
+  color: #f2f2f2 !important;
+}
+
+body[data-bs-theme="dark"] .table thead th {
+  background-color: #3d3d3d !important;
+  color: #ff85a2 !important;
+}
+
+body[data-bs-theme="dark"] .text-muted {
+  color: #bbbbbb !important;
+}
+
+body[data-bs-theme="dark"] .btn-action {
+  background-color: rgba(255,79,124,0.6) !important;
+}
+
+body[data-bs-theme="dark"] .btn-complete {
+  background-color: #ff4f7c !important;
+}
+
+body[data-bs-theme="dark"] .btn-edit {
+  background-color: #ff85a2 !important;
+}
+
+body[data-bs-theme="dark"] .btn-delete {
+  background-color: #ff4f7c !important;
+}
+
+body[data-bs-theme="dark"] .floating-btn {
+  background: #ff4f7c !important;
+}
+
+body[data-bs-theme="dark"] .welcome-username {
+  color: #ff85a2 !important;
+  text-shadow: none !important;
+}
+
+
+
+
+</style>
+
+<div class="container-fluid">
+  <div class="row">
+
+    <!-- Sidebar -->
+    <div class="col-md-3 vh-100 p-4 shadow-sm"
+         style="background: linear-gradient(135deg, #ff7096, #c92a71); border-right:1px solid #ddd;">
+      <!-- User Info -->
+      <div class="mb-4 text-center">
+        <div class="rounded-circle bg-white text-dark d-flex align-items-center justify-content-center mx-auto"
+             style="width:60px;height:60px;font-size:1.5rem; font-weight:bold;">
+          {{ request.user.username|slice:":1"|upper }}
+        </div>
+        <h6 class="mt-2 fw-bold text-white">{{ request.user.username }}</h6>
+      </div>
+
+      <h6 class="fw-bold text-white text-center mb-3">📊 Task Stats</h6>
+
+      <!-- All Tasks -->
+      <a class="list-group-item d-flex justify-content-between align-items-center rounded-4 mb-2 hover-scale glass-card text-white fw-bold"
+         data-bs-toggle="collapse" href="#allTasksDropdown">
+        📂 All Tasks
+        <span class="badge badge-custom bg-high">{{ total_tasks }}</span>
+      </a>
+      <div class="collapse" id="allTasksDropdown">
+        <ul class="list-group list-group-flush">
+          {% for task in tasks %}
+            <li class="list-group-item task-item d-flex justify-content-between align-items-center">
+              {{ task.title }}
+              {% if task.priority == "High" %}
+                <span class="badge badge-custom bg-high">H</span>
+              {% elif task.priority == "Medium" %}
+                <span class="badge badge-custom bg-medium">M</span>
+              {% else %}
+                <span class="badge badge-custom bg-low">L</span>
+              {% endif %}
+            </li>
+          {% empty %}
+            <li class="list-group-item text-white-50">No tasks</li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <!-- Completed Tasks -->
+      <a class="list-group-item d-flex justify-content-between align-items-center rounded-4 mb-2 hover-scale glass-card text-white fw-bold"
+         data-bs-toggle="collapse" href="#completedDropdown">
+        ✅ Completed
+        <span class="badge badge-custom bg-high">{{ completed_tasks }}</span>
+      </a>
+      <div class="collapse" id="completedDropdown">
+        <ul class="list-group list-group-flush">
+          {% for task in tasks %}
+          {% if task.completed %}
+            <li class="list-group-item task-item d-flex justify-content-between align-items-center">
+              {{ task.title }}
+              <form method="POST" action="{% url 'undo_task' task.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-outline-light rounded-circle">↩️</button>
+              </form>
+            </li>
+          {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+
+      <!-- Pending Tasks -->
+      <a class="list-group-item d-flex justify-content-between align-items-center rounded-4 mb-2 hover-scale glass-card text-white fw-bold"
+         data-bs-toggle="collapse" href="#pendingDropdown">
+        ⚠ Pending
+        <span class="badge badge-custom bg-medium">{{ pending_tasks }}</span>
+      </a>
+      <div class="collapse" id="pendingDropdown">
+        <ul class="list-group list-group-flush">
+          {% for task in tasks %}
+          {% if not task.completed %}
+            <li class="list-group-item task-item">
+              {{ task.title }}
+            </li>
+          {% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="col-md-9 py-4 position-relative"
+         style="background: linear-gradient(120deg, #ffe3ea, #ffdce5);">
+
+      <!-- Welcome -->
+      <div class="text-center mb-4">
+        <h2 class="fw-bold">Welcome <span class="welcome-username">{{ request.user.username }}</span></h2>
+        <p class="text-muted">Be productive, be unstoppable 💪</p>
+      </div>
+
+      <!-- Floating Add Task Button -->
+      <button class="floating-btn" type="button" data-bs-toggle="collapse" data-bs-target="#addTaskForm">+</button>
+
+      <!-- Add Task Form -->
+      <div class="collapse position-relative" id="addTaskForm">
+        <div class="glass-card p-4 shadow-sm animate__animated animate__fadeInDown"
+             style="max-width:500px; margin: 20px auto;">
+          <h4 class="mb-3 text-center fw-bold add-task-title">Add New Task</h4>
+
+          <form id="addTaskFormPremium" method="POST" class="row g-3">
+            {% csrf_token %}
+
+            <div class="col-12">
+              <input type="text" class="form-control form-control-sm" name="title" placeholder="Task Title" required>
+            </div>
+
+            <div class="col-md-6">
+              <select name="category" class="form-select form-select-sm">
+                {% for cat,_ in categories %}
+                  <option value="{{ cat }}">{{ cat }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="col-md-6">
+              <select name="priority" class="form-select form-select-sm">
+                {% for value,label in priorities %}
+                  <option value="{{ value }}">{{ label }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="col-12">
+              <input type="date" class="form-control form-control-sm" name="due_date">
+            </div>
+
+            <div class="col-12 text-center">
+              <button type="submit" class="btn btn-pink">
+                <i class="bi bi-plus-circle me-1"></i> Add Task
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <script>
+      // Add Task button animation
+      const addForm = document.getElementById('addTaskFormPremium');
+      addForm.addEventListener('submit', (e) => {
+          const btn = addForm.querySelector('button[type="submit"]');
+          btn.disabled = true;
+          btn.innerHTML = '<i class="bi bi-check-circle-fill me-1"></i> Saving...';
+          setTimeout(() => addForm.submit(), 600);
+      });
+
+      // Confetti effect for task completion
+      const completeButtons = document.querySelectorAll('.btn-complete');
+      completeButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          for(let i=0;i<15;i++){
+            const confetti = document.createElement('div');
+            confetti.classList.add('confetti');
+            confetti.style.left = (Math.random() * 100) + '%';
+            confetti.style.backgroundColor = `hsl(${Math.random()*360},100%,75%)`;
+            document.body.appendChild(confetti);
+            setTimeout(()=> confetti.remove(), 1000);
+          }
+        });
+      });
+      </script>
+
+      <!-- Task Table -->
+      <div class="table-responsive mt-3">
+        <table class="table table-striped align-middle shadow-sm rounded-4">
+          <thead class="text-center" style="background-color:#d85b70; color:#fff;">
+            <tr>
+              <th style="color:#c92a71;">Task</th>
+              <th style="color:#c92a71;">Priority</th>
+              <th style="color:#c92a71;">Status</th>
+              <th style="color:#c92a71;">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for task in tasks %}
+            <tr class="text-center">
+              <td class="fw-semibold">{{ task.title }}</td>
+              <td>
+                {% if task.priority == "High" %}
+                <span class="badge bg-high px-3 py-2 text-white">High</span>
+                {% elif task.priority == "Medium" %}
+                <span class="badge bg-medium px-3 py-2 text-white">Medium</span>
+                {% else %}
+                <span class="badge bg-low px-3 py-2 text-white">Low</span>
+                {% endif %}
+              </td>
+              <td>
+                {% if task.completed %} ✅ Done {% else %} ⏳ Pending {% endif %}
+              </td>
+              <td>
+                <div class="d-flex justify-content-center gap-2">
+                  {% if not task.completed %}
+                  <form method="POST" action="{% url 'complete_task' task.id %}">
+                    {% csrf_token %}
+                    <button class="btn-action btn-complete">✔</button>
+                  </form>
+                  {% endif %}
+                  <a href="{% url 'edit' task.id %}" class="btn-action btn-edit">✏️</a>
+                  <form method="POST" action="{% url 'delete' task.id %}">
+                    {% csrf_token %}
+                    <button class="btn-action btn-delete">🗑</button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+
+
+    </div>
+  </div>
+</div>
+{%endblock%}

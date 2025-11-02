@@ -1,0 +1,68 @@
+{% extends 'tasks/base.html' %}
+{% block content %}
+
+<div class="d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+  <div class="card p-4 shadow-sm" 
+       style="max-width:420px; width:100%; border: none; border-radius: 14px;">
+
+    <h3 class="text-center mb-3"
+        style="font-family: 'Poppins', sans-serif; font-weight:700; color:#a62345;">
+      Login to TaskAura
+    </h3>
+
+    <p class="text-center text-muted" style="font-size: 0.9rem;">
+      Welcome back, manage your tasks smartly
+    </p>
+
+    {% if messages %}
+    <div class="mt-2">
+        {% for message in messages %}
+        <div class="alert alert-warning py-2">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <form method="POST" class="mt-4">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <input type="text" name="username" class="form-control"
+                   style="border-radius: 10px; height: 45px; border:1px solid #ddd;"
+                   placeholder="Username" required>
+        </div>
+
+        <div class="mb-3">
+            <input type="password" name="password" class="form-control"
+                   style="border-radius: 10px; height: 45px; border:1px solid #ddd;"
+                   placeholder="Password" required>
+        </div>
+
+        <button type="submit"
+                class="btn w-100"
+                style="
+                  background-color:#a62345;
+                  border:none;
+                  border-radius: 50px;
+                  padding: 10px;
+                  font-weight:600;
+                  letter-spacing:0.5px;
+                  color:white;
+                  transition:0.3s;
+                "
+                onmouseover="this.style.backgroundColor='#8d1e38';"
+                onmouseout="this.style.backgroundColor='#a62345';">
+          Login
+        </button>
+    </form>
+
+    <p class="text-center mt-3" style="font-size:0.9rem;">
+      Don't have an account?
+      <a href="{% url 'register' %}" style="color:#a62345; font-weight:500;">
+        Register
+      </a>
+    </p>
+
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,90 @@
+{% extends "tasks/base.html" %}
+{% block content %}
+
+<div class="container py-5">
+
+  <!-- Header / Welcome -->
+  <div class="text-center mb-5">
+    <h1 class="fw-bold text-dark">
+      Welcome <span style="color:#800000;">{{ request.user.username }}</span>
+    </h1>
+    <p class="text-muted fs-5">
+      Manage your daily tasks smartly and stay productive!
+    </p>
+  </div>
+
+  <!-- Add Task Form -->
+  <form method="POST" class="d-flex justify-content-center mb-4">
+    {% csrf_token %}
+    <input type="text" name="title" class="form-control w-50 me-2 rounded-pill" placeholder="Add your new task..." required>
+    <button type="submit" class="btn btn-primary rounded-pill px-4">Add</button>
+  </form>
+
+  <!-- Dashboard Cards -->
+  <div class="row text-center mb-4 g-3">
+    <div class="col-md-4">
+      <div class="p-4 dashboard-card shadow-sm rounded-4">
+        <h6>Total Tasks</h6>
+        <h2>{{ total_tasks }}</h2>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="p-4 dashboard-card shadow-sm rounded-4">
+        <h6>Completed</h6>
+        <h2 class="text-success">{{ completed_tasks }}</h2>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="p-4 dashboard-card shadow-sm rounded-4">
+        <h6>Pending</h6>
+        <h2 class="text-danger">{{ pending_tasks }}</h2>
+      </div>
+    </div>
+  </div>
+
+  <!-- Progress Bar -->
+  <div class="mb-4 text-center">
+    <h6>Overall Progress</h6>
+    <div class="progress rounded-pill" style="height: 20px;">
+      <div class="progress-bar" role="progressbar" style="width: {{ progress_percent }}%;" 
+           aria-valuenow="{{ progress_percent }}" aria-valuemin="0" aria-valuemax="100">
+        {{ progress_percent }}%
+      </div>
+    </div>
+  </div>
+
+  <!-- Task List -->
+  <div class="row g-3">
+    {% for task in tasks %}
+    <div class="col-md-6">
+      <div class="dashboard-card p-3 shadow-sm d-flex justify-content-between align-items-center rounded-4">
+        <span class="{% if task.completed %}text-success text-decoration-line-through{% else %}text-dark{% endif %}">
+          {{ task.title }}
+        </span>
+        <div class="btn-group" role="group">
+          <form method="POST" action="{% url 'complete' task.id %}" style="display:inline;">
+            {% csrf_token %}
+            <button class="btn btn-sm {% if task.completed %}btn-warning{% else %}btn-success{% endif %}">
+              {% if task.completed %}Undo{% else %}Done{% endif %}
+            </button>
+          </form>
+          <a href="{% url 'edit' task.id %}" class="btn btn-sm btn-outline-primary">
+            <i class="bi bi-pencil"></i>
+          </a>
+          <form method="POST" action="{% url 'delete' task.id %}" style="display:inline;">
+            {% csrf_token %}
+            <button class="btn btn-sm btn-outline-danger">
+              <i class="bi bi-trash"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+      <p class="text-center text-muted">No tasks yet. Start by adding one!</p>
+    {% endfor %}
+  </div>
+
+</div>
+
+{% endblock %}
